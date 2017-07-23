@@ -207,33 +207,25 @@ def _to_dict(instance, deep=None, exclude=None, include=None,
         # (as specified by a dynamic relationship loader), or an actual
         # instance of a model.
         relatedvalue = getattr(instance, relation)
-        # HACK: In case the relatedvalue is a dynamically loaded
-        # relationship, we need to resolve the query into a concrete
-        # list of objects; see issue #89. We should also check to see
-        # if relatedvalue is a many-to-one relationship, in order to
-        # call relatedvalue.one() or something, but I don't know how
-        # to do that.
-        if isinstance(relatedvalue, (AppenderMixin, Query)):
-            relatedvalue = relatedvalue.all()
         if relatedvalue is None:
             result[relation] = None
+            continue
+        # Determine the included and excluded fields for the related model.
+        newexclude = None
+        newinclude = None
+        if exclude_relations is not None and relation in exclude_relations:
+            newexclude = exclude_relations[relation]
+        elif (include_relations is not None and
+              relation in include_relations):
+            newinclude = include_relations[relation]
+        if isinstance(relatedvalue, list):
+            result[relation] = [_to_dict(inst, rdeep, exclude=newexclude,
+                                         include=newinclude)
+                                for inst in relatedvalue]
         else:
-            # Determine the included and excluded fields for the related model.
-            newexclude = None
-            newinclude = None
-            if exclude_relations is not None and relation in exclude_relations:
-                newexclude = exclude_relations[relation]
-            elif include_relations is not None and \
-                    relation in include_relations:
-                newinclude = include_relations[relation]
-            if isinstance(relatedvalue, list):
-                result[relation] = [_to_dict(inst, rdeep, exclude=newexclude,
-                                             include=newinclude)
-                                    for inst in relatedvalue]
-            else:
-                result[relation] = _to_dict(relatedvalue, rdeep,
-                                            exclude=newexclude,
-                                            include=newinclude)
+            result[relation] = _to_dict(relatedvalue, rdeep,
+                                        exclude=newexclude,
+                                        include=newinclude)
     return result
 
 
@@ -817,7 +809,7 @@ class API(ModelView):
 
         # perform a filtered search
         try:
-            result = search(self.session, self.model, data)
+            result, total_rows = search(self.session, self.model, data)
         except NoResultFound:
             return jsonify(message='No result found')
         except MultipleResultsFound:
@@ -839,7 +831,7 @@ class API(ModelView):
 
         # for security purposes, don't transmit list as top-level JSON
         if isinstance(result, list):
-            return self._paginated(result, deep)
+            return self._paginated(result, deep, total_rows)
         else:
             result = _to_dict(result, deep, exclude=self.exclude_columns,
                               exclude_relations=self.exclude_relations,
@@ -848,7 +840,7 @@ class API(ModelView):
             return jsonify(result)
 
     # TODO it is ugly to have `deep` as an arg here; can we remove it?
-    def _paginated(self, instances, deep):
+    def _paginated(self, instances, deep, total_rows):
         """Returns a paginated JSONified response from the specified list of
         model instances.
 
@@ -886,7 +878,7 @@ class API(ModelView):
                             include=self.include_columns,
                             include_relations=self.include_relations)
                    for x in instances[start:end]]
-        return jsonify(page=page_num, objects=objects, total_pages=total_pages)
+        return jsonify(page=page_num, objects=objects, total_pages=total_pages, total_rows=total_rows)
 
     def _check_authentication(self):
         """If the specified HTTP method requires authentication (see the
