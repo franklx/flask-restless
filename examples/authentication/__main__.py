@@ -75,7 +75,7 @@ class User(db.Model, UserMixin):
 
 # Step 4: create the database and add a test user.
 db.create_all()
-user1 = User(username=u'example', password=u'example')
+user1 = User(username='example', password='example')
 db.session.add(user1)
 db.session.commit()
 

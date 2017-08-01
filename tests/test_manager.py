@@ -239,7 +239,7 @@ class APIManagerTest(TestSupport):
         # create a test person
         self.manager.create_api(self.Person, methods=['POST'],
                                 url_prefix='/add')
-        d = dict(name=u'Test', age=10, other=20,
+        d = dict(name='Test', age=10, other=20,
                  birth_date=datetime.date(1999, 12, 31).isoformat())
         response = self.app.post('/add/person', data=dumps(d))
         self.assertEqual(response.status_code, 201)
@@ -287,7 +287,7 @@ class APIManagerTest(TestSupport):
         # create a test person
         self.manager.create_api(self.Person, methods=['POST'],
                                 url_prefix='/add')
-        d = dict(name=u'Test', age=10, other=20,
+        d = dict(name='Test', age=10, other=20,
                  birth_date=datetime.date(1999, 12, 31).isoformat())
         response = self.app.post('/add/person', data=dumps(d))
         self.assertEqual(response.status_code, 201)

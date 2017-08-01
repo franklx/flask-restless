@@ -25,7 +25,7 @@ class HelpersTest(TestCase):
         condition.
 
         """
-        l = range(10)
+        l = list(range(10))
         left, right = partition(l, lambda x: x < 5)
         self.assertEqual(list(range(5)), left)
         self.assertEqual(list(range(5, 10)), right)

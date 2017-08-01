@@ -42,8 +42,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Flask-Restless'
-copyright = u'2012 Jeffrey Finkelstein'
+project = 'Flask-Restless'
+copyright = '2012 Jeffrey Finkelstein'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -57,10 +57,10 @@ import pkg_resources
 try:
     release = pkg_resources.get_distribution('Flask-Restless').version
 except pkg_resources.DistributionNotFound:
-    print 'To build the documentation, the distribution information of'
-    print 'Flask-Restless has to be available.  Either install the package'
-    print 'into your development environment or run "setup.py develop"'
-    print 'to setup the metadata.  A virtualenv is recommended!'
+    print('To build the documentation, the distribution information of')
+    print('Flask-Restless has to be available.  Either install the package')
+    print('into your development environment or run "setup.py develop"')
+    print('to setup the metadata.  A virtualenv is recommended!')
     sys.exit(1)
 del pkg_resources
 
@@ -202,8 +202,8 @@ htmlhelp_basename = 'Flask-Restlessdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'Flask-Restless.tex', u'Flask-Restless Documentation',
-   u'Jeffrey Finkelstein', 'manual'),
+  ('index', 'Flask-Restless.tex', 'Flask-Restless Documentation',
+   'Jeffrey Finkelstein', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -248,8 +248,8 @@ latex_additional_files = ['flaskstyle.sty', 'logo.pdf']
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'flask-restless', u'Flask-Restless Documentation',
-     [u'Jeffrey Finkelstein'], 1)
+    ('index', 'flask-restless', 'Flask-Restless Documentation',
+     ['Jeffrey Finkelstein'], 1)
 ]
 
 
@@ -264,13 +264,13 @@ intersphinx_mapping = {'python': ('http://docs.python.org/', None),
 # fall back if theme is not there
 try:
     __import__('flask_theme_support')
-except ImportError, e:
-    print '-' * 74
-    print 'Warning: Flask themes unavailable.  Building with default theme'
-    print 'If you want the Flask themes, run this command and build again:'
-    print
-    print '  git submodule update --init'
-    print '-' * 74
+except ImportError as e:
+    print('-' * 74)
+    print('Warning: Flask themes unavailable.  Building with default theme')
+    print('If you want the Flask themes, run this command and build again:')
+    print()
+    print('  git submodule update --init')
+    print('-' * 74)
 
     pygments_style = 'tango'
     html_theme = 'default'

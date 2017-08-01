@@ -67,10 +67,10 @@ class Person(db.Model):
 # Step 4: create the database and add some test people.
 db.create_all()
 for i in range(1, 10):
-    person = Person(name=u'person' + unicode(i))
+    person = Person(name='person' + str(i))
     db.session.add(person)
 db.session.commit()
-print Person.query.all()
+print(Person.query.all())
 
 # Step 5: create endpoints for the application.
 @app.route('/', methods=['GET'])

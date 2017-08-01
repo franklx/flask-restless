@@ -21,7 +21,7 @@
     :license: GNU AGPLv3+ or BSD
 
 """
-from __future__ import division
+
 
 from collections import defaultdict
 import datetime
@@ -342,7 +342,7 @@ def _evaluate_functions(session, model, functions):
         funcobj = getattr(func, funcname)
         try:
             field = getattr(model, fieldname)
-        except AttributeError, exception:
+        except AttributeError as exception:
             exception.field = fieldname
             raise exception
         # Time to store things to be executed. The processed list stores
@@ -356,7 +356,7 @@ def _evaluate_functions(session, model, functions):
     # If any of the functions
     try:
         evaluated = session.query(*processed).one()
-    except OperationalError, exception:
+    except OperationalError as exception:
         # HACK original error message is of the form:
         #
         #    '(OperationalError) no such function: bogusfuncname'
@@ -364,7 +364,7 @@ def _evaluate_functions(session, model, functions):
         bad_function = original_error_msg[37:]
         exception.function = bad_function
         raise exception
-    return dict(zip(funcnames, evaluated))
+    return dict(list(zip(funcnames, evaluated)))
 
 
 class ModelView(MethodView):
@@ -438,10 +438,10 @@ class FunctionAPI(ModelView):
             if not result:
                 return jsonify_status_code(204)
             return jsonify(result)
-        except AttributeError, exception:
+        except AttributeError as exception:
             message = 'No such field "%s"' % exception.field
             return jsonify_status_code(400, message=message)
-        except OperationalError, exception:
+        except OperationalError as exception:
             message = 'No such function "%s"' % exception.function
             return jsonify_status_code(400, message=message)
 
@@ -1038,7 +1038,7 @@ class API(ModelView):
             pk_name = str(_primary_key_name(instance))
             pk_value = getattr(instance, pk_name)
             return jsonify_status_code(201, **{pk_name: pk_value})
-        except self.validation_exceptions, exception:
+        except self.validation_exceptions as exception:
             return self._handle_validation_exception(exception)
 
     def patch(self, instid):
@@ -1096,7 +1096,7 @@ class API(ModelView):
                         setattr(item, param, value)
                     num_modified += 1
             self.session.commit()
-        except self.validation_exceptions, exception:
+        except self.validation_exceptions as exception:
             return self._handle_validation_exception(exception)
 
         if patchmany:

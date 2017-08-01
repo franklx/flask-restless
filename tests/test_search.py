@@ -8,7 +8,7 @@
     :license: GNU AGPLv3+ or BSD
 
 """
-from __future__ import with_statement
+
 
 from unittest2 import TestSuite
 
@@ -44,7 +44,7 @@ class QueryCreationTest(TestSupportPrefilled):
         :class:`flask_restless.search.SearchParameters` object.
 
         """
-        d = {'filters': [{'name': 'name', 'val': u'%y%', 'op': 'like'}]}
+        d = {'filters': [{'name': 'name', 'val': '%y%', 'op': 'like'}]}
         s = SearchParameters.from_dictionary(d)
         query_d = create_query(self.session, self.Person, d)
         query_s = create_query(self.session, self.Person, s)
@@ -52,16 +52,16 @@ class QueryCreationTest(TestSupportPrefilled):
 
     def test_basic_query(self):
         """Tests for basic query correctness."""
-        d = {'filters': [{'name': 'name', 'val': u'%y%', 'op': 'like'}]}
+        d = {'filters': [{'name': 'name', 'val': '%y%', 'op': 'like'}]}
         query = create_query(self.session, self.Person, d)
         self.assertEqual(query.count(), 3)  # Mary, Lucy and Katy
 
-        d = {'filters': [{'name': 'name', 'val': u'Lincoln', 'op': 'equals'}]}
+        d = {'filters': [{'name': 'name', 'val': 'Lincoln', 'op': 'equals'}]}
         query = create_query(self.session, self.Person, d)
         self.assertEqual(query.count(), 1)
         self.assertEqual(query.one().name, 'Lincoln')
 
-        d = {'filters': [{'name': 'name', 'val': u'Bogus', 'op': 'equals'}]}
+        d = {'filters': [{'name': 'name', 'val': 'Bogus', 'op': 'equals'}]}
         query = create_query(self.session, self.Person, d)
         self.assertEqual(query.count(), 0)
 
@@ -78,12 +78,12 @@ class QueryCreationTest(TestSupportPrefilled):
     def test_query_related_field(self):
         """Test for making a query with respect to a related field."""
         # add a computer to person 1
-        computer = self.Computer(name=u'turing', vendor=u'Dell')
+        computer = self.Computer(name='turing', vendor='Dell')
         p1 = self.session.query(self.Person).filter_by(id=1).first()
         p1.computers.append(computer)
         self.session.commit()
 
-        d = {'filters': [{'name': 'computers__name', 'val': u'turing',
+        d = {'filters': [{'name': 'computers__name', 'val': 'turing',
                           'op': 'any'}]}
         query = create_query(self.session, self.Person, d)
         self.assertEqual(query.count(), 1)
@@ -110,15 +110,15 @@ class OperatorsTest(TestSupportPrefilled):
 
         """
         for op in '==', 'eq', 'equals', 'equal_to':
-            d = dict(filters=[dict(name='name', op=op, val=u'Lincoln')])
+            d = dict(filters=[dict(name='name', op=op, val='Lincoln')])
             result = search(self.session, self.Person, d)
             self.assertEqual(len(result), 1)
-            self.assertEqual(result[0].name, u'Lincoln')
+            self.assertEqual(result[0].name, 'Lincoln')
         for op in '!=', 'ne', 'neq', 'not_equal_to', 'does_not_equal':
-            d = dict(filters=[dict(name='name', op=op, val=u'Lincoln')])
+            d = dict(filters=[dict(name='name', op=op, val='Lincoln')])
             result = search(self.session, self.Person, d)
             self.assertEqual(len(result), len(self.people) - 1)
-            self.assertNotIn(u'Lincoln', (p.name for p in result))
+            self.assertNotIn('Lincoln', (p.name for p in result))
         for op in '>', 'gt':
             d = dict(filters=[dict(name='age', op=op, val=20)])
             result = search(self.session, self.Person, d)
@@ -135,7 +135,7 @@ class OperatorsTest(TestSupportPrefilled):
             d = dict(filters=[dict(name='age', op=op, val=23)])
             result = search(self.session, self.Person, d)
             self.assertEqual(len(result), 3)
-        d = dict(filters=[dict(name='name', op='like', val=u'%y%')])
+        d = dict(filters=[dict(name='name', op='like', val='%y%')])
         result = search(self.session, self.Person, d)
         self.assertEqual(len(result), 3)
         d = dict(filters=[dict(name='age', op='in', val=[19, 21, 23])])
@@ -165,12 +165,12 @@ class OperatorsTest(TestSupportPrefilled):
 
         """
         # create test computers
-        computer1 = self.Computer(name=u'c1', vendor=u'foo')
-        computer2 = self.Computer(name=u'c2', vendor=u'bar')
-        computer3 = self.Computer(name=u'c3', vendor=u'bar')
-        computer4 = self.Computer(name=u'c4', vendor=u'bar')
-        computer5 = self.Computer(name=u'c5', vendor=u'foo')
-        computer6 = self.Computer(name=u'c6', vendor=u'foo')
+        computer1 = self.Computer(name='c1', vendor='foo')
+        computer2 = self.Computer(name='c2', vendor='bar')
+        computer3 = self.Computer(name='c3', vendor='bar')
+        computer4 = self.Computer(name='c4', vendor='bar')
+        computer5 = self.Computer(name='c5', vendor='foo')
+        computer6 = self.Computer(name='c6', vendor='foo')
         self.session.add_all((computer1, computer2, computer3, computer4,
                                  computer5, computer6))
         self.session.commit()
@@ -181,12 +181,12 @@ class OperatorsTest(TestSupportPrefilled):
         person3.computers = [computer5, computer6]
         self.session.commit()
         # test 'any'
-        d = dict(filters=[dict(name='computers__vendor', val=u'foo',
+        d = dict(filters=[dict(name='computers__vendor', val='foo',
                                op='any')])
         result = search(self.session, self.Person, d)
         self.assertEqual(len(result), 2)
         # test 'has'
-        d = dict(filters=[dict(name='owner__name', op='has', val=u'Lincoln')])
+        d = dict(filters=[dict(name='owner__name', op='has', val='Lincoln')])
         result = search(self.session, self.Computer, d)
         self.assertEqual(len(result), 3)
 
@@ -208,21 +208,21 @@ class SearchTest(TestSupportPrefilled):
         """
         # tests getting multiple results
         d = {'single': True,
-             'filters': [{'name': 'name', 'val': u'%y%', 'op': 'like'}]}
+             'filters': [{'name': 'name', 'val': '%y%', 'op': 'like'}]}
         with self.assertRaises(MultipleResultsFound):
             search(self.session, self.Person, d)
 
         # tests getting no results
         d = {'single': True,
-             'filters': [{'name': 'name', 'val': u'bogusname', 'op': '=='}]}
+             'filters': [{'name': 'name', 'val': 'bogusname', 'op': '=='}]}
         with self.assertRaises(NoResultFound):
             search(self.session, self.Person, d)
 
         # tests getting exactly one result
         d = {'single': True,
-             'filters': [{'name': 'name', 'val': u'Lincoln', 'op': '=='}]}
+             'filters': [{'name': 'name', 'val': 'Lincoln', 'op': '=='}]}
         result = search(self.session, self.Person, d)
-        self.assertEqual(result.name, u'Lincoln')
+        self.assertEqual(result.name, 'Lincoln')
 
 
 def load_tests(loader, standard_tests, pattern):

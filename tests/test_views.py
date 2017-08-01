@@ -9,7 +9,7 @@
     :license: GNU AGPLv3+ or BSD
 
 """
-from __future__ import with_statement
+
 
 from datetime import date
 from datetime import datetime
@@ -81,13 +81,13 @@ class ModelTestCase(TestSupport):
         :meth:`flask_restless.model.Entity.to_dict` method.
 
         """
-        me = self.Person(name=u'Lincoln', age=24, birth_date=date(1986, 9, 15))
+        me = self.Person(name='Lincoln', age=24, birth_date=date(1986, 9, 15))
         self.session.commit()
 
         me_dict = _to_dict(me)
         expectedfields = sorted(['birth_date', 'age', 'id', 'name', 'other'])
         self.assertEqual(sorted(me_dict), expectedfields)
-        self.assertEqual(me_dict['name'], u'Lincoln')
+        self.assertEqual(me_dict['name'], 'Lincoln')
         self.assertEqual(me_dict['age'], 24)
         self.assertEqual(me_dict['birth_date'], me.birth_date.isoformat())
 
@@ -119,8 +119,8 @@ class ModelTestCase(TestSupport):
 
         """
         now = datetime.now()
-        someone = self.Person(name=u'John', age=25)
-        computer = self.Computer(name=u'lixeiro', vendor=u'Lemote',
+        someone = self.Person(name='John', age=25)
+        computer = self.Computer(name='lixeiro', vendor='Lemote',
                                  buy_date=now)
         someone.computers.append(computer)
         self.session.commit()
@@ -128,8 +128,8 @@ class ModelTestCase(TestSupport):
         deep = {'computers': []}
         computers = _to_dict(someone, deep)['computers']
         self.assertEqual(len(computers), 1)
-        self.assertEqual(computers[0]['name'], u'lixeiro')
-        self.assertEqual(computers[0]['vendor'], u'Lemote')
+        self.assertEqual(computers[0]['name'], 'lixeiro')
+        self.assertEqual(computers[0]['vendor'], 'Lemote')
         self.assertEqual(computers[0]['buy_date'], now.isoformat())
         self.assertEqual(computers[0]['owner_id'], someone.id)
 
@@ -138,16 +138,16 @@ class ModelTestCase(TestSupport):
         # Here we're sure that we have a fresh table with no rows, so
         # let's create the first one:
         instance, created = _get_or_create(self.session, self.Person,
-                                           name=u'Lincoln', age=24)
+                                           name='Lincoln', age=24)
         self.assertTrue(created)
-        self.assertEqual(instance.name, u'Lincoln')
+        self.assertEqual(instance.name, 'Lincoln')
         self.assertEqual(instance.age, 24)
 
         # Now that we have a row, let's try to get it again
         second_instance, created = _get_or_create(self.session, self.Person,
-                                                  name=u'Lincoln')
+                                                  name='Lincoln')
         self.assertFalse(created)
-        self.assertEqual(second_instance.name, u'Lincoln')
+        self.assertEqual(second_instance.name, 'Lincoln')
         self.assertEqual(second_instance.age, 24)
 
 
@@ -309,7 +309,7 @@ class APITestCase(TestSupport):
         # assert loads(response.data)['error_list'].keys() == ['age']
 
         response = self.app.post('/api/person',
-                                 data=dumps({'name': u'Lincoln', 'age': 23}))
+                                 data=dumps({'name': 'Lincoln', 'age': 23}))
         self.assertEqual(response.status_code, 201)
         self.assertIn('id', loads(response.data))
 
@@ -333,8 +333,8 @@ class APITestCase(TestSupport):
 
     def test_post_with_submodels(self):
         """Tests the creation of a model with a related field."""
-        data = {'name': u'John', 'age': 2041,
-                'computers': [{'name': u'lixeiro', 'vendor': u'Lemote'}]}
+        data = {'name': 'John', 'age': 2041,
+                'computers': [{'name': 'lixeiro', 'vendor': 'Lemote'}]}
         response = self.app.post('/api/person', data=dumps(data))
         self.assertEqual(response.status_code, 201)
         self.assertIn('id', loads(response.data))
@@ -343,8 +343,8 @@ class APITestCase(TestSupport):
         self.assertEqual(len(loads(response.data)['objects']), 1)
         
     def test_post_with_single_submodel(self):
-        data = {'vendor': u'Apple',  'name': u'iMac',
-                'owner': {'name': u'John', 'age': 2041}}
+        data = {'vendor': 'Apple',  'name': 'iMac',
+                'owner': {'name': 'John', 'age': 2041}}
         response = self.app.post('/api/computer', data=dumps(data))
         self.assertEqual(response.status_code, 201)
         self.assertIn('id', loads(response.data))
@@ -359,7 +359,7 @@ class APITestCase(TestSupport):
         """
         # Creating the person who's gonna be deleted
         response = self.app.post('/api/person',
-                                 data=dumps({'name': u'Lincoln', 'age': 23}))
+                                 data=dumps({'name': 'Lincoln', 'age': 23}))
         self.assertEqual(response.status_code, 201)
         self.assertIn('id', loads(response.data))
 
@@ -376,7 +376,7 @@ class APITestCase(TestSupport):
 
         # Making sure it has been deleted
         people = self.session.query(self.Person).filter_by(id=1)
-        self.assertEquals(people.count(), 0)
+        self.assertEqual(people.count(), 0)
 
     def test_delete_absent_instance(self):
         """Test that deleting an instance of the model which does not exist
@@ -408,11 +408,11 @@ class APITestCase(TestSupport):
 
         # Creating some people
         self.app.post('/api/v2/person',
-                      data=dumps({'name': u'Lincoln', 'age': 23}))
+                      data=dumps({'name': 'Lincoln', 'age': 23}))
         self.app.post('/api/v2/person',
-                      data=dumps({'name': u'Lucy', 'age': 23}))
+                      data=dumps({'name': 'Lucy', 'age': 23}))
         self.app.post('/api/v2/person',
-                      data=dumps({'name': u'Mary', 'age': 25}))
+                      data=dumps({'name': 'Mary', 'age': 25}))
 
         # change a single entry
         resp = self.app.put('/api/v2/person/1', data=dumps({'age': 24}))
@@ -458,11 +458,11 @@ class APITestCase(TestSupport):
 
         # Creating some people
         self.app.post('/api/v2/person',
-                      data=dumps({'name': u'Lincoln', 'age': 23}))
+                      data=dumps({'name': 'Lincoln', 'age': 23}))
         self.app.post('/api/v2/person',
-                      data=dumps({'name': u'Lucy', 'age': 23}))
+                      data=dumps({'name': 'Lucy', 'age': 23}))
         self.app.post('/api/v2/person',
-                      data=dumps({'name': u'Mary', 'age': 25}))
+                      data=dumps({'name': 'Mary', 'age': 25}))
 
         # Trying to pass invalid data to the update method
         resp = self.app.patch('/api/v2/person', data='Hello there')
@@ -487,7 +487,7 @@ class APITestCase(TestSupport):
         :http:method:`patch` method.
 
         """
-        resp = self.app.post('/api/person', data=dumps({'name': u'Lincoln',
+        resp = self.app.post('/api/person', data=dumps({'name': 'Lincoln',
                                                          'age': 10}))
         self.assertEqual(resp.status_code, 201)
         self.assertIn('id', loads(resp.data))
@@ -511,11 +511,11 @@ class APITestCase(TestSupport):
         """
         # Let's create a row as usual
         response = self.app.post('/api/person',
-                                 data=dumps({'name': u'Lincoln', 'age': 23}))
+                                 data=dumps({'name': 'Lincoln', 'age': 23}))
         self.assertEqual(response.status_code, 201)
 
         data = {'computers':
-                    {'add': [{'name': u'lixeiro', 'vendor': u'Lemote'}]}
+                    {'add': [{'name': 'lixeiro', 'vendor': 'Lemote'}]}
                 }
         response = self.app.patch('/api/person/1', data=dumps(data))
         self.assertEqual(response.status_code, 200)
@@ -544,10 +544,10 @@ class APITestCase(TestSupport):
         """
         # Creating the row that will be updated
         data = {
-            'name': u'Lincoln', 'age': 23,
+            'name': 'Lincoln', 'age': 23,
             'computers': [
-                {'name': u'lixeiro', 'vendor': u'Lemote'},
-                {'name': u'pidinti', 'vendor': u'HP'},
+                {'name': 'lixeiro', 'vendor': 'Lemote'},
+                {'name': 'pidinti', 'vendor': 'HP'},
             ],
         }
         self.app.post('/api/person', data=dumps(data))
@@ -555,7 +555,7 @@ class APITestCase(TestSupport):
         # Data for the update
         update_data = {
             'computers': {
-                'remove': [{'name': u'pidinti'}],
+                'remove': [{'name': 'pidinti'}],
             }
         }
         resp = self.app.patch('/api/person/1', data=dumps(update_data))
@@ -575,10 +575,10 @@ class APITestCase(TestSupport):
 
         """
         # Creating all rows needed in our test
-        person_data = {'name': u'Lincoln', 'age': 23}
+        person_data = {'name': 'Lincoln', 'age': 23}
         resp = self.app.post('/api/person', data=dumps(person_data))
         self.assertEqual(resp.status_code, 201)
-        comp_data = {'name': u'lixeiro', 'vendor': u'Lemote'}
+        comp_data = {'name': 'lixeiro', 'vendor': 'Lemote'}
         resp = self.app.post('/api/computer', data=dumps(comp_data))
         self.assertEqual(resp.status_code, 201)
 
@@ -591,7 +591,7 @@ class APITestCase(TestSupport):
         self.assertEqual(resp.status_code, 200)
         loaded = loads(resp.data)
         self.assertEqual(len(loaded['computers']), 1)
-        self.assertEqual(loaded['computers'][0]['name'], u'lixeiro')
+        self.assertEqual(loaded['computers'][0]['name'], 'lixeiro')
 
         # Now, let's remove it and delete it
         update2_data = {
@@ -622,11 +622,11 @@ class APITestCase(TestSupport):
         self.assertEqual(loads(resp.data)['message'], 'Unable to decode data')
 
         create = lambda x: self.app.post('/api/person', data=dumps(x))
-        create({'name': u'Lincoln', 'age': 23, 'other': 22})
-        create({'name': u'Mary', 'age': 19, 'other': 19})
-        create({'name': u'Lucy', 'age': 25, 'other': 20})
-        create({'name': u'Katy', 'age': 7, 'other': 10})
-        create({'name': u'John', 'age': 28, 'other': 10})
+        create({'name': 'Lincoln', 'age': 23, 'other': 22})
+        create({'name': 'Mary', 'age': 19, 'other': 19})
+        create({'name': 'Lucy', 'age': 25, 'other': 20})
+        create({'name': 'Katy', 'age': 7, 'other': 10})
+        create({'name': 'John', 'age': 28, 'other': 10})
 
         search = {
             'filters': [
@@ -644,12 +644,12 @@ class APITestCase(TestSupport):
         search = {
             'single': True,      # I'm sure we have only one row here
             'filters': [
-                {'name': 'name', 'val': u'Lincoln', 'op': 'equals'}
+                {'name': 'name', 'val': 'Lincoln', 'op': 'equals'}
             ],
         }
         resp = self.app.search('/api/person', dumps(search))
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(loads(resp.data)['name'], u'Lincoln')
+        self.assertEqual(loads(resp.data)['name'], 'Lincoln')
 
         # Looking for something that does not exist on the database
         search['filters'][0]['val'] = 'Sammy'
@@ -675,11 +675,11 @@ class APITestCase(TestSupport):
         resp = self.app.search('/api/person', dumps(search))
         self.assertEqual(resp.status_code, 200)
         loaded = loads(resp.data)['objects']
-        self.assertEqual(loaded[0][u'age'], 7)
-        self.assertEqual(loaded[1][u'age'], 19)
-        self.assertEqual(loaded[2][u'age'], 23)
-        self.assertEqual(loaded[3][u'age'], 25)
-        self.assertEqual(loaded[4][u'age'], 28)
+        self.assertEqual(loaded[0]['age'], 7)
+        self.assertEqual(loaded[1]['age'], 19)
+        self.assertEqual(loaded[2]['age'], 23)
+        self.assertEqual(loaded[3]['age'], 25)
+        self.assertEqual(loaded[4]['age'], 28)
 
         # Test the IN operation
         search = {
@@ -690,13 +690,13 @@ class APITestCase(TestSupport):
         resp = self.app.search('/api/person', dumps(search))
         self.assertEqual(resp.status_code, 200)
         loaded = loads(resp.data)['objects']
-        self.assertEqual(loaded[0][u'age'], 7)
-        self.assertEqual(loaded[1][u'age'], 28)
+        self.assertEqual(loaded[0]['age'], 7)
+        self.assertEqual(loaded[1]['age'], 28)
 
         # Testing related search
         update = {
             'computers': {
-                'add': [{'name': u'lixeiro', 'vendor': u'Lenovo'}]
+                'add': [{'name': 'lixeiro', 'vendor': 'Lenovo'}]
             }
         }
         resp = self.app.patch('/api/person/1', data=dumps(update))
@@ -707,7 +707,7 @@ class APITestCase(TestSupport):
             'single': True,
             'filters': [
                 {'name': 'computers__name',
-                 'val': u'lixeiro',
+                 'val': 'lixeiro',
                  'op': 'any'}
             ]
         }
@@ -736,9 +736,9 @@ class APITestCase(TestSupport):
     def test_search2(self):
         """Testing more search functionality."""
         create = lambda x: self.app.post('/api/person', data=dumps(x))
-        create({'name': u'Fuxu', 'age': 32})
-        create({'name': u'Everton', 'age': 33})
-        create({'name': u'Lincoln', 'age': 24})
+        create({'name': 'Fuxu', 'age': 32})
+        create({'name': 'Everton', 'age': 33})
+        create({'name': 'Lincoln', 'age': 24})
 
         # Let's test the search using an id
         search = {
@@ -747,13 +747,13 @@ class APITestCase(TestSupport):
         }
         resp = self.app.search('/api/person', dumps(search))
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(loads(resp.data)['name'], u'Fuxu')
+        self.assertEqual(loads(resp.data)['name'], 'Fuxu')
 
         # Testing limit and offset
         search = {'limit': 1, 'offset': 1}
         resp = self.app.search('/api/person', dumps(search))
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(loads(resp.data)['objects'][0]['name'], u'Everton')
+        self.assertEqual(loads(resp.data)['objects'][0]['name'], 'Everton')
 
         # Testing multiple results when calling .one()
         resp = self.app.search('/api/person', dumps({'single': True}))
@@ -833,7 +833,7 @@ class APITestCase(TestSupport):
         self.manager.create_api(self.Person, url_prefix='/api/v3',
                                 results_per_page=0)
         for i in range(25):
-            d = dict(name=unicode('person%s' % i))
+            d = dict(name=str('person%s' % i))
             response = self.app.post('/api/person', data=dumps(d))
             self.assertEqual(response.status_code, 201)
 
@@ -910,11 +910,11 @@ class APITestCase(TestSupport):
                                 post_form_preprocessor=decorator_function)
 
         response = self.app.post('/api/v2/person',
-                                 data=dumps({'name': u'Lincoln', 'age': 23}))
+                                 data=dumps({'name': 'Lincoln', 'age': 23}))
         self.assertEqual(response.status_code, 201)
 
         person = self.session.query(self.Person).filter_by(id=loads(response.data)['id']).first()
-        self.assertEquals(person.other, 7)
+        self.assertEqual(person.other, 7)
 
 
 def load_tests(loader, standard_tests, pattern):
