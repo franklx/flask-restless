@@ -11,7 +11,7 @@
 from unittest2 import TestCase
 from unittest2 import TestSuite
 
-from flask.ext.restless.helpers import partition
+from flask_restless.helpers import partition
 
 
 __all__ = ['HelpersTest']

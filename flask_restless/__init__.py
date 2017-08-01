@@ -1,5 +1,5 @@
 """
-    flask.ext.restless
+    flask_restless
     ~~~~~~~~~~~~~~~~~~
 
     Flask-Restless is a `Flask <http://flask.pocoo.org>`_ extension which

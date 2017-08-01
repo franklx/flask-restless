@@ -14,14 +14,14 @@ from unittest2 import TestSuite
 
 from flask import json
 try:
-    from flask.ext.sqlalchemy import SQLAlchemy
+    from flask_sqlalchemy import SQLAlchemy
 except:
     has_flask_sqlalchemy = False
 else:
     has_flask_sqlalchemy = True
 
-from flask.ext.restless import APIManager
-from flask.ext.restless.views import _get_columns
+from flask_restless import APIManager
+from flask_restless.views import _get_columns
 
 from .helpers import FlaskTestBase
 from .helpers import setUpModule
@@ -50,7 +50,7 @@ class APIManagerTest(TestSupport):
 
     def test_init_app(self):
         """Tests for initializing the Flask application after instantiating the
-        :class:`flask.ext.restless.APIManager` object.
+        :class:`flask_restless.APIManager` object.
 
         """
         # initialize the Flask application
@@ -445,7 +445,7 @@ class FSATest(FlaskTestBase):
         self.db.drop_all()
 
     def test_flask_sqlalchemy(self):
-        """Tests that :class:`flask.ext.restless.APIManager` correctly exposes
+        """Tests that :class:`flask_restless.APIManager` correctly exposes
         models defined using Flask-SQLAlchemy.
 
         """

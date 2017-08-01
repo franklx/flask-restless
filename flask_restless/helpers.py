@@ -1,5 +1,5 @@
 """
-    flask.ext.restless.helpers
+    flask_restless.helpers
     ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Helper functions for Flask-Restless.
@@ -42,4 +42,4 @@ def unicode_keys_to_strings(dictionary):
         30
 
     """
-    return dict((str(k), v) for k, v in dictionary.iteritems())
+    return dict((str(k), v) for k, v in dictionary.items())

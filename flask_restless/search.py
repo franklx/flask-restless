@@ -1,5 +1,5 @@
 """
-    flask.ext.restless.search
+    flask_restless.search
     ~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Provides querying, searching, and function evaluation on SQLAlchemy models.

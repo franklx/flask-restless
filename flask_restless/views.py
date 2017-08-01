@@ -1,18 +1,18 @@
 """
-    flask.ext.restless.views
+    flask_restless.views
     ~~~~~~~~~~~~~~~~~~~~~~~~
 
     Provides the following view classes, subclasses of
     :class:`flask.MethodView` which provide generic endpoints for interacting
     with an entity of the database:
 
-    :class:`flask.ext.restless.views.API`
+    :class:`flask_restless.views.API`
       Provides the endpoints for each of the basic HTTP methods. This is the
       main class used by the
-      :meth:`flask.ext.restless.manager.APIManager.create_api` method to create
+      :meth:`flask_restless.manager.APIManager.create_api` method to create
       endpoints.
 
-    :class:`flask.ext.restless.views.FunctionAPI`
+    :class:`flask_restless.views.FunctionAPI`
       Provides a :http:method:`get` endpoint which returns the result of
       evaluating some function on the entire collection of a given model.
 
@@ -90,10 +90,10 @@ def _get_or_create(session, model, **kwargs):
     method.
 
     `session` is the session in which all database transactions are made (this
-    should be :attr:`flask.ext.sqlalchemy.SQLAlchemy.session`).
+    should be :attr:`flask_sqlalchemy.SQLAlchemy.session`).
 
     `model` is the SQLAlchemy model to get or create (this should be a subclass
-    of :class:`~flask.ext.restless.model.Entity`).
+    of :class:`~flask_restless.model.Entity`).
 
     `kwargs` are the keyword arguments which will be passed to the
     :func:`sqlalchemy.orm.query.Query.filter_by` function.
@@ -202,7 +202,7 @@ def _to_dict(instance, deep=None, exclude=None, include=None,
             result[key] = value.isoformat()
     # recursively call _to_dict on each of the `deep` relations
     deep = deep or {}
-    for relation, rdeep in deep.iteritems():
+    for relation, rdeep in deep.items():
         # Get the related value so we can see if it is None, a list, a query
         # (as specified by a dynamic relationship loader), or an actual
         # instance of a model.
@@ -300,7 +300,7 @@ def _evaluate_functions(session, model, functions):
     `session` is the SQLAlchemy session in which all database transactions will
     be performed.
 
-    `model` is the :class:`flask.ext.restless.Entity` object on which the
+    `model` is the :class:`flask_restless.Entity` object on which the
     specified functions will be evaluated.
 
     ``functions`` is a list of dictionaries of the form::
@@ -569,7 +569,7 @@ class API(ModelView):
         an existing or new related model to add. If a dictionary contains the
         key ``'id'``, that instance of the related model will be
         added. Otherwise, the
-        :classmethod:`~flask.ext.restless.model.get_or_create` class method
+        :classmethod:`~flask_restless.model.get_or_create` class method
         will be used to get or create a model to add.
 
         """
@@ -728,7 +728,7 @@ class API(ModelView):
 
         """
         result = {}
-        for fieldname, value in dictionary.iteritems():
+        for fieldname, value in dictionary.items():
             if _is_date_field(self.model, fieldname) and value is not None:
                 result[fieldname] = parse_datetime(value)
             else:
@@ -1092,7 +1092,7 @@ class API(ModelView):
             num_modified = 0
             if params:
                 for item in query.all():
-                    for param, value in params.iteritems():
+                    for param, value in params.items():
                         setattr(item, param, value)
                     num_modified += 1
             self.session.commit()

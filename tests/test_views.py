@@ -18,12 +18,12 @@ from unittest2 import TestSuite
 from flask import json
 from sqlalchemy.exc import OperationalError
 
-from flask.ext.restless.views import _evaluate_functions as evaluate_functions
-from flask.ext.restless.views import _get_columns
-from flask.ext.restless.views import _get_or_create
-from flask.ext.restless.views import _get_relations
-from flask.ext.restless.views import _to_dict
-from flask.ext.restless.manager import IllegalArgumentError
+from flask_restless.views import _evaluate_functions as evaluate_functions
+from flask_restless.views import _get_columns
+from flask_restless.views import _get_or_create
+from flask_restless.views import _get_relations
+from flask_restless.views import _to_dict
+from flask_restless.manager import IllegalArgumentError
 
 from .helpers import setUpModule
 from .helpers import tearDownModule

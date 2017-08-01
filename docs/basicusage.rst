@@ -1,6 +1,6 @@
 .. _basicusage:
 
-.. currentmodule:: flask.ext.restless
+.. currentmodule:: flask_restless
 
 Creating API endpoints
 ======================
@@ -9,7 +9,7 @@ To use this extension, you must have defined your database models using either
 SQLAlchemy or Flask-SQLALchemy.
 
 The basic setup for Flask-SQLAlchemy is the same. First, create your
-:class:`flask.Flask` object, :class:`flask.ext.sqlalchemy.SQLAlchemy` object,
+:class:`flask.Flask` object, :class:`flask_sqlalchemy.SQLAlchemy` object,
 and model classes as usual but with the following two (reasonable) restrictions
 on models:
 
@@ -17,17 +17,17 @@ on models:
    type :class:`sqlalchemy.Unicode`.
 2. They must have an ``__init__`` method which accepts keyword arguments for
    all columns (the constructor in
-   :class:`flask.ext.sqlalchemy.SQLAlchemy.Model` supplies such a method, so
+   :class:`flask_sqlalchemy.SQLAlchemy.Model` supplies such a method, so
    you don't need to declare a new one).
 
 .. sourcecode:: python
 
    import flask
-   import flask.ext.sqlalchemy
+   import flask_sqlalchemy
 
    app = flask.Flask(__name__)
    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-   db = flask.ext.sqlalchemy.SQLAlchemy(app)
+   db = flask_sqlalchemy.SQLAlchemy(app)
 
    class Person(db.Model):
        id = db.Column(db.Integer, primary_key=True)
@@ -98,10 +98,10 @@ If you are using pure SQLAlchemy::
    :ref:`searchformat`) uses double underscores as a separator. This may change
    in future versions.
 
-Second, instantiate a :class:`flask.ext.restless.APIManager` object with the
-:class:`~flask.Flask` and :class:`~flask.ext.sqlalchemy.SQLAlchemy` objects::
+Second, instantiate a :class:`flask_restless.APIManager` object with the
+:class:`~flask.Flask` and :class:`~flask_sqlalchemy.SQLAlchemy` objects::
 
-    from flask.ext.restless import APIManager
+    from flask_restless import APIManager
 
     manager = APIManager(app, flask_sqlalchemy_db=db)
 

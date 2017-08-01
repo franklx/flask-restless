@@ -40,7 +40,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
-from flask.ext.restless import APIManager
+from flask_restless import APIManager
 
 #: The file descriptor and filename of the database which will be used in the
 #: tests.

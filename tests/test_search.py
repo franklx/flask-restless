@@ -15,9 +15,9 @@ from unittest2 import TestSuite
 from sqlalchemy.orm.exc import MultipleResultsFound
 from sqlalchemy.orm.exc import NoResultFound
 
-from flask.ext.restless.search import create_query
-from flask.ext.restless.search import search
-from flask.ext.restless.search import SearchParameters
+from flask_restless.search import create_query
+from flask_restless.search import search
+from flask_restless.search import SearchParameters
 
 from .helpers import setUpModule
 from .helpers import tearDownModule

@@ -1,8 +1,8 @@
 """
-    flask.ext.restless.manager
+    flask_restless.manager
     ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Provides :class:`flask.ext.restless.manager.APIManager`, the class which
+    Provides :class:`flask_restless.manager.APIManager`, the class which
     users of Flask-Restless must instantiate to create ReSTful APIs for their
     database models.
 
@@ -73,7 +73,7 @@ class APIManager(object):
         :class:`session.orm.session.Session` class, in which case a new
         :class:`sqlalchemy.orm.scoped_session` will be created from it.
 
-        `flask_sqlalchemy_db` is the :class:`flask.ext.sqlalchemy.SQLAlchemy`
+        `flask_sqlalchemy_db` is the :class:`flask_sqlalchemy.SQLAlchemy`
         object with which `app` has been registered and which contains the
         database models for which API endpoints will be created.
 
@@ -82,7 +82,7 @@ class APIManager(object):
         For example, to use this class with models defined in pure SQLAlchemy::
 
             from flask import Flask
-            from flask.ext.restless import APIManager
+            from flask_restless import APIManager
             from sqlalchemy import create_engine
             from sqlalchemy.orm.session import sessionmaker
 
@@ -95,8 +95,8 @@ class APIManager(object):
         and with models defined with Flask-SQLAlchemy::
 
             from flask import Flask
-            from flask.ext.restless import APIManager
-            from flask.ext.sqlalchemy import SQLAlchemy
+            from flask_restless import APIManager
+            from flask_sqlalchemy import SQLAlchemy
 
             app = Flask(__name__)
             db = SQLALchemy(app)
@@ -141,7 +141,7 @@ class APIManager(object):
         `session` is the :class:`session.orm.session.Session` object in which
         changes to the database will be made.
 
-        `flask_sqlalchemy_db` is the :class:`flask.ext.sqlalchemy.SQLAlchemy`
+        `flask_sqlalchemy_db` is the :class:`flask_sqlalchemy.SQLAlchemy`
         object with which `app` has been registered and which contains the
         database models for which API endpoints will be created.
 
@@ -154,7 +154,7 @@ class APIManager(object):
         To use this method with pure SQLAlchemy, for example::
 
             from flask import Flask
-            from flask.ext.restless import APIManager
+            from flask_restless import APIManager
             from sqlalchemy import create_engine
             from sqlalchemy.orm.session import sessionmaker
 
@@ -171,8 +171,8 @@ class APIManager(object):
         and with models defined with Flask-SQLAlchemy::
 
             from flask import Flask
-            from flask.ext.restless import APIManager
-            from flask.ext.sqlalchemy import SQLAlchemy
+            from flask_restless import APIManager
+            from flask_sqlalchemy import SQLAlchemy
 
             apimanager = APIManager()
 
@@ -215,7 +215,7 @@ class APIManager(object):
         object specified in the constructor of this class, so you do *not* need
         to register it yourself.
 
-        `model` is the :class:`flask.ext.restless.Entity` class for which a
+        `model` is the :class:`flask_restless.Entity` class for which a
         ReSTful interface will be created. Note this must be a class, not an
         instance of a class.
 

@@ -1,3 +1,3 @@
-.. currentmodule:: flask.ext.restless
+.. currentmodule:: flask_restless
 
 .. include:: ../CHANGES

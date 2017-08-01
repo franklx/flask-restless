@@ -1,6 +1,6 @@
 .. _searchformat:
 
-.. currentmodule:: flask.ext.restless
+.. currentmodule:: flask_restless
 
 Making search queries
 =====================
