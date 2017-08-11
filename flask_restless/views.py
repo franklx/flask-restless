@@ -815,6 +815,8 @@ class API(ModelView):
         except MultipleResultsFound:
             return jsonify(message='Multiple results found')
         except:
+            import traceback
+            traceback.print_exc()
             return jsonify_status_code(400,
                                        message='Unable to construct query')
 
@@ -1072,6 +1074,8 @@ class API(ModelView):
                 # create a SQLALchemy Query from the query parameter `q`
                 query = create_query(self.session, self.model, data)
             except:
+                import traceback
+                traceback.print_exc()
                 return jsonify_status_code(400,
                                            message='Unable to construct query')
         else:
